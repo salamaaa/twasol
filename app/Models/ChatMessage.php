@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class ChatMessage extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    public function room(){
+        return $this->hasOne(ChatRoom::class,'id','hat_room_id');
+    }
+
+    public function user(){
+        return $this->hasOne(User::class,'id','user_id');
+    }
 }
