@@ -1,10 +1,11 @@
 <template>
-<div>Message</div>
+<div>{{message.user.name}}: {{message.message}}</div>
 </template>
 
 <script>
 export default {
-    name: "messageItem"
+    name: "messageItem",
+    props:['message']
 }
 </script>
 
