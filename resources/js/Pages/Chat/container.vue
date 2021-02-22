@@ -43,7 +43,28 @@ export default {
             messages: []
         }
     },
+    watch: {
+        currentRoom(val,oldVal) {
+            if(oldVal.id){
+                this.disconnect(oldVal);
+            }
+            this.connect();
+        }
+    },
     methods: {
+        connect() {
+            if (this.currentRoom.id) {
+                let vm = this;
+                this.getMessages();
+                window.Echo.private('chat.' + this.currentRoom.id)
+                    .listen('message.new', e => {
+                        vm.getMessages()
+                    });
+            }
+        },
+        disconnect(room){
+            window.Echo.leave('chat.'+room.id);
+        },
         getRooms() {
             axios.get('/chat/rooms')
                 .then(response => {
@@ -53,7 +74,8 @@ export default {
                 .catch(error => {
                     console.log(error)
                 });
-        },
+        }
+        ,
         getMessages() {
             axios.get('/chat/room/' + this.currentRoom.id + '/messages')
                 .then(response => {
@@ -62,10 +84,10 @@ export default {
                 .catch(error => {
                     console.log(error);
                 });
-        },
+        }
+        ,
         setRoom(room) {
             this.currentRoom = room;
-            this.getMessages();
         }
     },
     created() {
